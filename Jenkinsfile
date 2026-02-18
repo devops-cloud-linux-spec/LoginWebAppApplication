@@ -1,7 +1,7 @@
 pipeline {
     agent any
     tools{
-        jdk 'java-17'
+        jdk 'jdk17'
         maven 'Maven3.9'
     }
     environment {
@@ -10,7 +10,7 @@ pipeline {
      stages{
         stage("Git Checkout"){
             steps{
-                git branch: 'master', changelog: false, poll: false, url: 'https://github.com/devops-with-Git/LoginWebAppApplicationWith-Docker.git'
+                git branch: 'master', changelog: false, poll: false, url: 'https://github.com/devops-cloud-linux-spec/LoginWebAppApplication.git'
             }
         }
         stage("Compile"){
@@ -43,10 +43,10 @@ pipeline {
        stage("Docker Build and Push") {
     steps {
         script {
-            withDockerRegistry(credentialsId: 'Docker-Hub', toolName: 'docker') {
+            withDockerRegistry(credentialsId: 'prashikrk', toolName: 'docker') {
                 sh """
-                docker build -t swapnilhub/loginwebappseven:latest .
-                docker push swapnilhub/loginwebappseven:latest
+                docker build -t prashikrk/loginwebappseven:latest .
+                docker push prashikrk/loginwebappseven:latest
                 """
             }
         }
@@ -54,12 +54,12 @@ pipeline {
 }
         stage("TRIVY"){
             steps{
-                sh "trivy image swapnilhub/loginwebappseven:latest > trivyimage.txt"
+                sh "trivy image prashikrk/loginwebappseven:latest > trivyimage.txt"
             }
         } 
         stage("Deploy using Docker container"){
             steps{
-                sh "docker run -d --name=loginwebseven1 -p 8083:8080 swapnilhub/loginwebappseven:latest"
+                sh "docker run -d --name=loginwebseven1 -p 8083:8080 prashikrk/loginwebappseven:latest"
             }
         }       
 }
@@ -70,7 +70,7 @@ post {
             body: "Project: ${env.JOB_NAME}<br/>" +
                 "Build Number: ${env.BUILD_NUMBER}<br/>" +
                 "URL: ${env.BUILD_URL}<br/>",
-            to: 'learn.with.aws.devops@gmail.com',  
+            to: 'prashikk71@gmail.com',  
             attachmentsPattern: 'trivyimage.txt'
         }
     }
