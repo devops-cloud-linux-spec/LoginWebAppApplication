@@ -43,7 +43,7 @@ pipeline {
        stage("Docker Build and Push") {
     steps {
         script {
-            withDockerRegistry(credentialsId: 'prashikrk', toolName: 'prashikrk') {
+            withDockerRegistry([credentialsId: 'prashikrk']) {
                 sh """
                 docker build -t prashikrk/loginwebappseven:latest .
                 docker push prashikrk/loginwebappseven:latest
